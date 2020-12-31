@@ -178,6 +178,18 @@ class ViewController: UIViewController {
     }
     
   }
+  
+  private func showDetailVC(){
+    
+    guard let detailVC = detailVC else { return }
+    detailVC.modalPresentationStyle = .overCurrentContext
+    detailVC.modalTransitionStyle = .crossDissolve
+    detailVC.delegate = self
+    
+    detailVC.document = selectedDocument
+    mode = .viewing
+    present(detailVC.navigationController!, animated: true, completion: nil)
+  }
 }
 
 //MARK: DetailViewControllerDelegate
@@ -215,6 +227,14 @@ extension ViewController: UITableViewDataSource {
     cell.subtitleLabel?.text = entry.version.modificationDate?.mediumString
     
     return cell
+  }
+  
+  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    let entry = entries[indexPath.row]
+    selectedEntry = entry
+    selectedDocument = Document(fileURL: entry.fileURL)
+    showDetailVC()
+    tableView.deselectRow(at: indexPath, animated: true)
   }
 }
 
