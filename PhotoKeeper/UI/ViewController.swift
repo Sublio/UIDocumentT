@@ -110,14 +110,35 @@ class ViewController: UIViewController {
   }
   
   private func delete(entry: Entry) {
-    guard let entryIndex = indexOfEntry(for: entry.description) else {
-      return
+    let fileURL = entry.fileURL
+    guard let entryIndex = indexOfEntry(for: fileURL.absoluteString) else { return }
+    
+    do {
+      try FileManager.default.removeItem(at: fileURL)
+      entries.remove(at: entryIndex)
+      tableView.reloadData()
+    }catch{
+      fatalError("Couldnt remove file")
     }
-    entries.remove(at: entryIndex)
-    tableView.reloadData()
   }
   
   private func rename(_ entry: Entry, with name: String) {
+    
+    guard entry.description != name else { return }
+    let newDocFileName = "\(name).\(String.appExtensions)"
+    if docNameExists(for: newDocFileName) {
+      fatalError("Name already taken")
+    }
+    guard let newDocURL = getDocumentURL(for: newDocFileName) else { return }
+    do {
+      try FileManager.default.moveItem(at: entry.fileURL, to: newDocURL)
+    } catch  {
+      fatalError("Unable to move file")
+    }
+    
+    entry.fileURL = newDocURL
+    entry.version = NSFileVersion.currentVersionOfItem(at: entry.fileURL) ?? entry.version
+    tableView.reloadData()
   }
   
   private var mode: Mode = .viewing {
@@ -197,6 +218,26 @@ class ViewController: UIViewController {
 //MARK: DetailViewControllerDelegate
 extension ViewController: DetailViewControllerDelegate {
   func detailViewControllerDidFinish(_ viewController: DetailViewController, with photoEntry: PhotoEntry?, title: String?) {
+    // 1
+    guard
+      let doc = viewController.document,
+      let version = NSFileVersion.currentVersionOfItem(at: doc.fileURL)
+      else {
+        if let docData = photoEntry {
+          insertNewDocument(with: docData, title: title)
+        }
+        return
+    }
+
+    // 2
+    if let docData = photoEntry {
+      doc.photo = docData
+    }
+
+    addOrUpdateEntry(for: doc.fileURL, metadata: doc.metaData, version: version)
+    if let title = title, let entry = selectedEntry, title != entry.description {
+      rename(entry, with: title)
+    }
   }
 }
 
