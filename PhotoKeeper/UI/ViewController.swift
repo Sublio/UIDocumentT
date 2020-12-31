@@ -176,7 +176,15 @@ class ViewController: UIViewController {
     if let version = NSFileVersion.currentVersionOfItem(at: fileURL){
       self.addOrUpdateEntry(for: url, metadata: metadata, version: version)
     }
-    
+  }
+  
+  private func showDetailVC(){
+    if let detailVC = storyboard!.instantiateViewController(identifier: "DetailViewControllerID") as? DetailViewController{
+      detailVC.delegate = self
+      detailVC.document = selectedDocument
+      mode = .viewing
+      present(detailVC, animated: true, completion: nil)
+    }
   }
 }
 
@@ -216,6 +224,14 @@ extension ViewController: UITableViewDataSource {
     
     return cell
   }
+  
+  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    let enrty = entries[indexPath.row]
+    selectedEntry = enrty
+    selectedDocument = Document(fileURL: enrty.fileURL)
+    showDetailVC()
+    tableView.deselectRow(at: indexPath, animated: true)
+  }
 }
 
 //MARK: UITextFieldDelegate
@@ -250,22 +266,22 @@ extension ViewController: UITextFieldDelegate {
   }
 }
 
-//MARK: Additional Conveniences
-extension ViewController {
-  private var detailVC: DetailViewController? {
-    let storyboard = UIStoryboard(name: "Main", bundle: nil)
-    let detailNavVC = storyboard.instantiateViewController(withIdentifier: "DetailNavigationController")
-    
-    guard
-      let navVC = detailNavVC as? UINavigationController,
-      let detailVC = navVC.topViewController as? DetailViewController
-      else {
-        return nil
-    }
-
-    return detailVC
-  }
-}
+////MARK: Additional Conveniences
+//extension ViewController {
+//  private var detailVC: DetailViewController? {
+//    let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//    let detailNavVC = storyboard.instantiateViewController(withIdentifier: "DetailViewController")
+//
+////    guard
+////      let navVC = detailNavVC as? UINavigationController,
+////      let detailVC = navVC.topViewController as? DetailViewController
+////      else {
+////        return nil
+////    }
+//
+//    return detailVC
+//  }
+//}
 
 private enum Mode {
   case editing
