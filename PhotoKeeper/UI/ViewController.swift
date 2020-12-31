@@ -100,7 +100,9 @@ class ViewController: UIViewController {
   
   
   @IBAction func addEntry(_ sender: Any) {
-    insertNewDocument()
+    selectedEntry = nil
+    selectedDocument = nil
+    showDetailVC()
   }
   
   @IBAction func editEntries(_ sender: Any) {
