@@ -100,7 +100,9 @@ class ViewController: UIViewController {
   
   
   @IBAction func addEntry(_ sender: Any) {
-    insertNewDocument()
+    selectedEntry = nil
+    selectedDocument = nil
+    showDetailVC()
   }
   
   @IBAction func editEntries(_ sender: Any) {
@@ -178,14 +180,17 @@ class ViewController: UIViewController {
     }
   }
   
+  
   private func showDetailVC(){
-    if let detailVC = storyboard!.instantiateViewController(identifier: "DetailViewControllerID") as? DetailViewController{
-      detailVC.delegate = self
-      detailVC.document = selectedDocument
-      mode = .viewing
-      detailVC.modalPresentationStyle = .fullScreen
-      present(detailVC, animated: true, completion: nil)
-    }
+    
+    guard let detailVC = detailVC else { return }
+    detailVC.modalPresentationStyle = .overCurrentContext
+    detailVC.modalTransitionStyle = .crossDissolve
+    detailVC.delegate = self
+    
+    detailVC.document = selectedDocument
+    mode = .viewing
+    present(detailVC.navigationController!, animated: true, completion: nil)
   }
 }
 
@@ -227,9 +232,9 @@ extension ViewController: UITableViewDataSource {
   }
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    let enrty = entries[indexPath.row]
-    selectedEntry = enrty
-    selectedDocument = Document(fileURL: enrty.fileURL)
+    let entry = entries[indexPath.row]
+    selectedEntry = entry
+    selectedDocument = Document(fileURL: entry.fileURL)
     showDetailVC()
     tableView.deselectRow(at: indexPath, animated: true)
   }
@@ -264,6 +269,23 @@ extension ViewController: UITextFieldDelegate {
   
   func textFieldDidEndEditing(_ textField: UITextField) {
     textField.resignFirstResponder()
+  }
+}
+
+//MARK: Additional Conveniences
+extension ViewController {
+  private var detailVC: DetailViewController? {
+    let storyboard = UIStoryboard(name: "Main", bundle: nil)
+    let detailNavVC = storyboard.instantiateViewController(withIdentifier: "DetailNavigationController")
+    
+    guard
+      let navVC = detailNavVC as? UINavigationController,
+      let detailVC = navVC.topViewController as? DetailViewController
+      else {
+        return nil
+    }
+
+    return detailVC
   }
 }
 

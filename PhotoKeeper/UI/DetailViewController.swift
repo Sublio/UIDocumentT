@@ -73,6 +73,14 @@ class DetailViewController: UIViewController {
   }
   
   private func openDocument() {
+    if document == nil {
+        showImagePicker()
+    }else {
+        document?.open(completionHandler: { [weak self] _  in
+            self?.fullImageView.image = self?.document?.photo?.mainImage
+            self?.titleTextField.text = self?.document?.description
+        })
+    }
   }
   
   @IBAction func editPhoto(_ sender: Any) {
@@ -80,6 +88,8 @@ class DetailViewController: UIViewController {
   }
   
   @IBAction func donePressed(_ sender: Any) {
+    
+    
   }
   
   @IBAction func dismiss(_ sender: Any) {
@@ -90,8 +100,21 @@ class DetailViewController: UIViewController {
 extension DetailViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
   @objc func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
     guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else { return }
+    let options = PHImageRequestOptions()
+    options.resizeMode = .exact
+    options.isSynchronous = true
+    
+    if let imageAsset = info[UIImagePickerController.InfoKey.phAsset] as? PHAsset {
+        let imageManager = PHImageManager.default()
+        imageManager.requestImage(for: imageAsset, targetSize: CGSize(width: 150, height: 150), contentMode: .aspectFill, options: options) { (result, _) in
+            self.newThumbnailImage = result
+        }
+    }
     fullImageView.image = image
+    let mainSize = fullImageView.bounds.size
+    newImage = image.imageByBestFit(for: mainSize)
     picker.dismiss(animated: true, completion: nil)
+    
   }
   
   @objc func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
