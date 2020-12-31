@@ -88,8 +88,34 @@ class DetailViewController: UIViewController {
   }
   
   @IBAction func donePressed(_ sender: Any) {
+    var photoEntry: PhotoEntry?
+    if let newImage = newImage, let newThumb = newThumbnailImage {
+        photoEntry = PhotoEntry(mainImage: newImage, thumbnailImage: newThumb)
+    }
     
+    //1
     
+    let hasDifferentPhoto = !newImage.isSame(photo: document?.photo?.mainImage)
+    let hasDifferentTitle = document?.description != titleTextField.text
+    hasChanges = hasDifferentPhoto || hasDifferentTitle
+    
+    //2
+    
+    guard let doc = document, hasChanges else {
+        delegate?.detailViewControllerDidFinish(self, with: photoEntry, title: titleTextField.text)
+        dismiss(animated: true, completion: nil)
+        return
+    }
+    
+    //3
+    
+    doc.photo = photoEntry
+    doc.save(to: doc.fileURL, for: .forOverwriting) { [weak self] success in
+        guard let self = self else { return }
+        if !success {fatalError("Failed to close doc")}
+        self.delegate?.detailViewControllerDidFinish(self, with: photoEntry, title: self.titleTextField.text)
+    }
+    self.dismiss(animated: true, completion: nil)
   }
   
   @IBAction func dismiss(_ sender: Any) {
