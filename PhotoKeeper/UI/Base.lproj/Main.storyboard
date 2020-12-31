@@ -128,10 +128,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="whb-GC-jvo">
-                                <rect key="frame" x="0.0" y="126" width="375" height="541"/>
+                                <rect key="frame" x="0.0" y="170" width="375" height="497"/>
                             </imageView>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Edit title..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="C2v-TU-Lzn">
-                                <rect key="frame" x="19" y="22" width="337.5" height="34"/>
+                                <rect key="frame" x="19" y="66" width="337.5" height="34"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                                 <connections>
@@ -139,7 +139,7 @@
                                 </connections>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1u9-pA-XQK">
-                                <rect key="frame" x="136" y="78" width="103" height="30"/>
+                                <rect key="frame" x="136" y="122" width="103" height="30"/>
                                 <state key="normal" title="Add/Edit Photo"/>
                                 <connections>
                                     <action selector="editPhoto:" destination="FyS-s1-IOV" eventType="touchUpInside" id="FPI-HI-6HU"/>
@@ -180,7 +180,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tSI-cj-qi1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1038" y="654"/>
+            <point key="canvasLocation" x="1976.8" y="653.52323838080963"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="vIU-dx-6fp">
@@ -199,6 +199,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KcZ-fL-OLc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-346" y="654"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="bkS-xs-OiO">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="ZRt-vA-fpk" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="8e5-g6-J0h">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="FyS-s1-IOV" kind="relationship" relationship="rootViewController" id="PaX-Bc-51F"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="9UM-2d-ukL" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1182" y="654"/>
         </scene>
     </scenes>
 </document>

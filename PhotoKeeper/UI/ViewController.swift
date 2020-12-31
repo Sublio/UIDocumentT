@@ -183,6 +183,7 @@ class ViewController: UIViewController {
       detailVC.delegate = self
       detailVC.document = selectedDocument
       mode = .viewing
+      detailVC.modalPresentationStyle = .fullScreen
       present(detailVC, animated: true, completion: nil)
     }
   }
@@ -266,22 +267,6 @@ extension ViewController: UITextFieldDelegate {
   }
 }
 
-////MARK: Additional Conveniences
-//extension ViewController {
-//  private var detailVC: DetailViewController? {
-//    let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//    let detailNavVC = storyboard.instantiateViewController(withIdentifier: "DetailViewController")
-//
-////    guard
-////      let navVC = detailNavVC as? UINavigationController,
-////      let detailVC = navVC.topViewController as? DetailViewController
-////      else {
-////        return nil
-////    }
-//
-//    return detailVC
-//  }
-//}
 
 private enum Mode {
   case editing
